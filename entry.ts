@@ -15,13 +15,14 @@ function createDdayLabel(
   from: number | null,
   to: number | null,
   now: number,
+  offset: number,
 ): string {
   if (from && to) {
     if (from > to) {
       [from, to] = [to, from]; // swap
     }
-    const text = `${format(new Date(from), "yyyy-MM-dd")} ~ ${
-      format(new Date(to), "yyyy-MM-dd")
+    const text = `${format(new Date(from + offset), "yyyy-MM-dd")} ~ ${
+      format(new Date(to + offset), "yyyy-MM-dd")
     }`;
     if (now < from) {
       const dday = Math.ceil((from - now) / ONE_DAY);
@@ -56,7 +57,7 @@ function createDdayLabel(
   }
 
   if (from) {
-    const text = `${format(new Date(from), "yyyy-MM-dd")}`;
+    const text = `${format(new Date(from + offset), "yyyy-MM-dd")}`;
     if (now < from) {
       const dday = Math.ceil((from - now) / ONE_DAY);
       return label([
@@ -100,12 +101,13 @@ addEventListener("fetch", async (event) => {
 
   switch (args[0]) {
     case "dday": {
-      let from = args[1] ? new Date(args[1]).getTime() : null;
-      let to = args[2] ? new Date(args[2]).getTime() : null;
+      const offset = +(url.searchParams.get("offset") ?? 0);
+      const from = args[1] ? new Date(args[1]).getTime() - offset : null;
+      const to = args[2] ? new Date(args[2]).getTime() - offset : null;
       const now = +(url.searchParams.get("now") ?? Date.now());
 
       event.respondWith(
-        responseSvg(createDdayLabel(from, to, now)),
+        responseSvg(createDdayLabel(from, to, now, offset)),
       );
       return;
     }
