@@ -36,7 +36,7 @@ function createDdayLabel(
       ]);
     }
     if (now < to + ONE_DAY) {
-      const dday = Math.ceil((now - from) / ONE_DAY);
+      const dday = Math.max(1, Math.ceil((now - from) / ONE_DAY));
       return label([
         {
           text: text,
