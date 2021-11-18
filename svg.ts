@@ -70,17 +70,16 @@ export function label(
   }
 
   const mMessages = messages.map((message) => {
-    const m =
-      write(message.text, {
-        fontSize: message.fontSize ?? 12,
-        decimalPlaces: 2,
-      })[0];
+    const m = write(message.text, {
+      fontSize: message.fontSize ?? 12,
+      decimalPlaces: 2,
+    })[0];
     return {
       w: Math.ceil(m.w),
       h: Math.ceil(m.h),
       d: m.d,
       px: message.px ?? 6,
-      py: message.py ?? 2,
+      py: message.py ?? 2.5,
       bgColor: message.bgColor ?? "#555",
       textColor: message.textColor ?? "#fff",
     };

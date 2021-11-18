@@ -112,6 +112,9 @@ addEventListener("fetch", (event) => {
         );
         return;
       }
+      case "error": {
+        throw new Error("error");
+      }
     }
 
     event.respondWith(
