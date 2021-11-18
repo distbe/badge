@@ -93,25 +93,34 @@ function createDdayLabel(
   return label([{ text: "D-Day", bgColor: "#05F2AF" }]);
 }
 
-addEventListener("fetch", async (event) => {
-  const url = new URL(event.request.url);
+addEventListener("fetch", (event) => {
+  try {
+    const url = new URL(event.request.url);
 
-  const path = url.pathname.replace(/^\/|\/$/g, "");
-  const args = path.split("/");
+    const path = url.pathname.replace(/^\/|\/$/g, "");
+    const args = path.split("/");
 
-  switch (args[0]) {
-    case "dday": {
-      const offset = +(url.searchParams.get("offset") ?? 0);
-      const from = args[1] ? new Date(args[1]).getTime() - offset : null;
-      const to = args[2] ? new Date(args[2]).getTime() - offset : null;
-      const now = +(url.searchParams.get("now") ?? Date.now());
+    switch (args[0]) {
+      case "dday": {
+        const offset = +(url.searchParams.get("offset") ?? 0);
+        const from = args[1] ? new Date(args[1]).getTime() - offset : null;
+        const to = args[2] ? new Date(args[2]).getTime() - offset : null;
+        const now = +(url.searchParams.get("now") ?? Date.now());
 
-      event.respondWith(
-        responseSvg(createDdayLabel(from, to, now, offset)),
-      );
-      return;
+        event.respondWith(
+          responseSvg(createDdayLabel(from, to, now, offset)),
+        );
+        return;
+      }
     }
-  }
 
-  event.respondWith(responseSvg(label([{ text: "label.dist.be" }])));
+    event.respondWith(
+      responseSvg(label([{ text: "badge.dist.be", bgColor: "#4D86DB" }])),
+    );
+  } catch (e) {
+    console.warn("[error]", e);
+    event.respondWith(
+      responseSvg(label([{ text: "#Error", bgColor: "#D95436" }])),
+    );
+  }
 });
